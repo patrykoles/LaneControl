@@ -20,5 +20,17 @@ namespace api.Mappers
                 ClosingTime = alleyModel.ClosingTime
             };
         }
+
+        public static Alley ToAlleyFromCreateAlleyRequestDto(this CreateAlleyRequestDto alleyDto)
+        {
+            return new Alley
+            {
+                Name = alleyDto.Name,
+                City = alleyDto.City,
+                Address = alleyDto.Address,
+                OpeningTime = alleyDto.OpeningTime,
+                ClosingTime = alleyDto.ClosingTime
+            };
+        }
     }
 }
