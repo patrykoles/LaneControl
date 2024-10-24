@@ -81,6 +81,10 @@ builder.Services.AddAuthentication(options => {
 
 builder.Services.AddScoped<IAlleyRepository, AlleyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ILaneRepository, LaneRepository>();
+builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 var app = builder.Build();
 

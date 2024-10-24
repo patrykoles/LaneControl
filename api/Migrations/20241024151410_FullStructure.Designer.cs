@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241024151410_FullStructure")]
+    partial class FullStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6f11656e-6a08-4e54-88f1-f9da6819a32b",
+                            Id = "f7cba744-dd1b-48fd-8e74-853a8f65690c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6ff89a79-4a06-404a-b360-373b8a2a114c",
+                            Id = "d9179634-37ef-4944-8a12-d0699898ebea",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -273,7 +276,7 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AlleyId")
+                    b.Property<int?>("AlleyId")
                         .HasColumnType("int");
 
                     b.Property<int>("Highscore")
@@ -443,9 +446,7 @@ namespace api.Migrations
                 {
                     b.HasOne("api.Models.Alley", "Alley")
                         .WithMany("Lanes")
-                        .HasForeignKey("AlleyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AlleyId");
 
                     b.Navigation("Alley");
                 });

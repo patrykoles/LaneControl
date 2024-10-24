@@ -2,20 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Data;
 using api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/lane")]
+    [Route("api/order")]
     [ApiController]
-    public class LaneController : ControllerBase
+    public class OrderController : ControllerBase
     {
-        private readonly ILaneRepository _laneRepo;
-        public LaneController(ILaneRepository laneRepo)
+        private readonly IOrderRepository _orderRepo;
+        public OrderController(IOrderRepository orderRepo)
         {
-            _laneRepo = laneRepo;
+            _orderRepo = orderRepo;
         }
     }
 }
