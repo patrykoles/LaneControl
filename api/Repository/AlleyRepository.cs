@@ -18,6 +18,11 @@ namespace api.Repository
             _context = context;
         }
 
+        public async Task<bool> AlleyExists(int id)
+        {
+            return await _context.Alleys.AnyAsync(x => x.Id == id);
+        }
+
         public async Task<Alley> CreateAsync(Alley alleyModel)
         {
             await _context.Alleys.AddAsync(alleyModel);
@@ -33,6 +38,9 @@ namespace api.Repository
             {
                 return null;
             }
+
+            var lanes = await _context.Lanes.Where(x => x.AlleyId == id).ToListAsync();
+            _context.Lanes.RemoveRange(lanes);
 
             _context.Alleys.Remove(alleyModel);
             await _context.SaveChangesAsync();

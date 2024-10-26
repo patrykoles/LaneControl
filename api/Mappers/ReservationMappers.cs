@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.Mappers
 {
-    public class ReservationMappers
+    public static class ReservationMappers
     {
         
     }

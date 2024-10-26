@@ -34,7 +34,7 @@ namespace api.Controllers
             return Ok(alleyDtos);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
@@ -58,7 +58,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int}")]
         [Authorize]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlleyRequestDto updateDto)
         {
@@ -74,7 +74,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:int}")]
         [Authorize]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

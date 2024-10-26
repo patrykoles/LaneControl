@@ -18,5 +18,7 @@ namespace api.Interfaces
         Task<Alley?> UpdateAsync(int id, UpdateAlleyRequestDto alleyDto);
 
         Task<Alley?> DeleteAsync(int id);
+
+        Task<bool> AlleyExists(int id);
     }
 }

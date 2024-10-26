@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.Mappers
 {
-    public class MenuItemMappers
+    public static class MenuItemMappers
     {
         
     }
