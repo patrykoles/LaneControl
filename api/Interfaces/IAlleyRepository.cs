@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Alley;
+using api.Helpers;
 using api.Models;
 
 namespace api.Interfaces
 {
     public interface IAlleyRepository
     {
-        Task<List<Alley>> GetAllAsync();
+        Task<List<Alley>> GetAllAsync(AlleyQuery query);
 
         Task<Alley?> GetByIdAsync(int id);
 

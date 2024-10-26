@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Lane;
+using api.Helpers;
 using api.Models;
 
 namespace api.Interfaces
 {
     public interface ILaneRepository
     {
-        Task<List<Lane>> GetAllAsync();
+        Task<List<Lane>> GetAllAsync(LaneQuery query);
 
         Task<Lane> CreateAsync(Lane laneModel);
 

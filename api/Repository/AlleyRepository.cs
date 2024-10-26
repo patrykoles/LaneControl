@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Alley;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -47,9 +48,31 @@ namespace api.Repository
             return alleyModel;
         }
 
-        public async Task<List<Alley>> GetAllAsync()
+        public async Task<List<Alley>> GetAllAsync(AlleyQuery query)
         {
-            return await _context.Alleys.ToListAsync();
+            var alleys =  _context.Alleys.AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(query.Name))
+            {
+                alleys = alleys.Where(x => x.Name.Contains(query.Name));
+            }
+
+            if(!string.IsNullOrWhiteSpace(query.City))
+            {
+                alleys = alleys.Where(x => x.City.Contains(query.City));
+            }
+
+            if(!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if(query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    alleys = query.IsDescending ? alleys.OrderByDescending(x => x.Name) : alleys.OrderBy(x => x.Name);
+                }
+            }
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await alleys.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Alley?> GetByIdAsync(int id)

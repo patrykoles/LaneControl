@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Lane;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Authorization;
@@ -26,9 +27,12 @@ namespace api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] LaneQuery query)
         {
-            var lanes = await _laneRepo.GetAllAsync();
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var lanes = await _laneRepo.GetAllAsync(query);
 
             var laneDtos = lanes.Select(x => x.ToLaneDto());
 
@@ -40,6 +44,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var lane = await _laneRepo.GetByIdAsync(id);
             if(lane == null){
                 return NotFound();
@@ -52,6 +59,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Create([FromRoute] int alleyId, [FromBody] CreateLaneRequestDto laneDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if(!(await _alleyRepo.AlleyExists(alleyId)))
             {
                 return BadRequest("Ta kręgielnia nie istnieje!");
@@ -72,6 +82,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateLaneRequestDto laneDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
                 var laneModel = await _laneRepo.UpdateAsync(id, laneDto);
@@ -91,6 +104,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var laneModel = await _laneRepo.DeleteAsync(id);
             if(laneModel == null)
             {

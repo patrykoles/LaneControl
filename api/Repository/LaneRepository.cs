@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Lane;
 using api.Exceptions;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,18 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<Lane>> GetAllAsync()
+        public async Task<List<Lane>> GetAllAsync(LaneQuery query)
         {
-            return await _context.Lanes.ToListAsync();
+            var lanes = _context.Lanes.AsQueryable();
+
+            if(query.AlleyId != null)
+            {
+                lanes = lanes.Where(x => x.AlleyId == query.AlleyId);
+            }
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await lanes.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Lane> CreateAsync(Lane laneModel)

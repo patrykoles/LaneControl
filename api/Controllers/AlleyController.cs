@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Alley;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,12 @@ namespace api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] AlleyQuery query)
         {
-            var alleys = await _alleyRepo.GetAllAsync();
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var alleys = await _alleyRepo.GetAllAsync(query);
             
             var alleyDtos = alleys.Select(s => s.ToAlleyDto());
 
@@ -38,6 +42,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var alley = await _alleyRepo.GetByIdAsync(id);
             
             if(alley == null)
@@ -52,6 +59,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateAlleyRequestDto alleyDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var alleyModel = alleyDto.ToAlleyFromCreateAlleyRequestDto();
             await _alleyRepo.CreateAsync(alleyModel);
             return CreatedAtAction(nameof(GetById), new { id = alleyModel.Id }, alleyModel.ToAlleyDto());
@@ -62,6 +72,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlleyRequestDto updateDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var alleyModel = await _alleyRepo.UpdateAsync(id, updateDto);
 
             if(alleyModel == null)
@@ -78,6 +91,9 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var alleyModel = await _alleyRepo.DeleteAsync(id);
 
             if(alleyModel == null)
