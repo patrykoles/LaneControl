@@ -16,8 +16,7 @@ namespace api.Models
         public int Highscore { get; set; }
         public int AlleyId { get; set; }
 
-        public Alley? Alley { get; set; }
-
+        public Alley? Alley { get; set; } 
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

@@ -19,5 +19,7 @@ namespace api.Interfaces
         Task<Lane?> UpdateAsync(int id, UpdateLaneRequestDto laneDto);
 
         Task<Lane?> DeleteAsync(int id);
+
+        Task<bool> LaneExists(int id);
     }
 }
