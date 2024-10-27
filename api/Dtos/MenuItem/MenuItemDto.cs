@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Models
+namespace api.Dtos.MenuItem
 {
-    [Table("MenuItem")]
-    public class MenuItem
+    public class MenuItemDto
     {
         public int Id { get; set; }
 
@@ -17,11 +15,6 @@ namespace api.Models
 
         public string Category { get; set; } = string.Empty;
 
-        [Column(TypeName = "decimal(5,2)")]
         public decimal CurrentPrice { get; set; }
-
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
-
     }
 }

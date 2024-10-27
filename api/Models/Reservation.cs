@@ -17,7 +17,7 @@ namespace api.Models
 
         public int LaneId { get; set; }
 
-        public string AppUserId { get; set; }
+        public string AppUserId { get; set; } =string.Empty;
 
         public AppUser? AppUser { get; set; }
 

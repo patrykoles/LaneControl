@@ -1,3 +1,4 @@
+using System.Globalization;
 using api.Data;
 using api.Interfaces;
 using api.Models;
@@ -5,6 +6,7 @@ using api.Repository;
 using api.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +47,25 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
+var cultureInfo = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+/*
+var supportedCultures = new[]
+{
+    new CultureInfo("pl-PL"),
+    new CultureInfo("en-US")
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+*/
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

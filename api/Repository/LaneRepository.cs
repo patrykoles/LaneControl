@@ -31,7 +31,7 @@ namespace api.Repository
 
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
-            return await lanes.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            return await lanes.Skip(skipNumber).Take(query.PageSize).OrderBy(x => x.Number).ToListAsync();
         }
 
         public async Task<Lane> CreateAsync(Lane laneModel)
