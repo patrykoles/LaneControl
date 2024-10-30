@@ -15,9 +15,11 @@ namespace api.Repository
     public class LaneRepository : ILaneRepository
     {
         private readonly ApplicationDBContext _context;
-        public LaneRepository(ApplicationDBContext context)
+        private readonly IReservationRepository _reservationRepo;
+        public LaneRepository(ApplicationDBContext context, IReservationRepository reservationRepo)
         {
             _context = context;
+            _reservationRepo = reservationRepo;
         }
 
         public async Task<List<Lane>> GetAllAsync(LaneQuery query)
@@ -79,6 +81,13 @@ namespace api.Repository
             {
                 return null;
             }
+
+            var reservations = await _context.Reservations.Where(r => r.LaneId == laneModel.Id).ToListAsync();
+            foreach(var reservation in reservations)
+            {
+                await _reservationRepo.DeleteAsync(reservation.Id);
+            }
+            
             _context.Lanes.Remove(laneModel);
             await _context.SaveChangesAsync();
 

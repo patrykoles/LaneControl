@@ -16,7 +16,7 @@ namespace api.Mappers
                 Id = reservationModel.Id,
                 BeginTime = reservationModel.BeginTime,
                 EndTime = reservationModel.EndTime,
-                LaneNumber = reservationModel.Lane.Id,
+                LaneNumber = reservationModel.Lane.Number,
                 AlleyName = reservationModel.Lane.Alley.Name,
                 AlleyCity = reservationModel.Lane.Alley.City,
                 AlleyAddress = reservationModel.Lane.Alley.Address,

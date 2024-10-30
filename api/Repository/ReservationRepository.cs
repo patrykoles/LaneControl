@@ -20,7 +20,7 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<bool> CheckAvailability(Reservation reservationModel, int laneId)
+        public async Task<bool> CheckAvailability(Reservation reservationModel, int laneId, int? oldReservationId)
         {
             var laneModel = await _context.Lanes.Include(x => x.Alley).FirstOrDefaultAsync(x => x.Id == laneId);
             if(laneModel == null || laneModel.Alley == null)
@@ -30,7 +30,7 @@ namespace api.Repository
             var beginHours = reservationModel.BeginTime.TimeOfDay;
             var endHours = reservationModel.EndTime.TimeOfDay;
 
-            return !await _context.Reservations.AnyAsync(r => r.LaneId == laneId 
+            return !await _context.Reservations.AnyAsync(r => r.Id != oldReservationId && r.LaneId == laneId 
                 && ((r.BeginTime.TimeOfDay > beginHours && r.BeginTime.TimeOfDay < endHours)
                 ||(r.EndTime.TimeOfDay > beginHours && r.EndTime.TimeOfDay < endHours)));
 
@@ -47,7 +47,7 @@ namespace api.Repository
             var endTime = reservationModel.EndTime;
 
             var beginHours = beginTime.TimeOfDay;
-            var endHours = beginTime.TimeOfDay;
+            var endHours = endTime.TimeOfDay;
 
             var openingTime = laneModel.Alley.OpeningTime;
             var closingTime = laneModel.Alley.ClosingTime;
@@ -123,8 +123,18 @@ namespace api.Repository
 
         public async Task<List<Reservation>> GetUserReservationsAsync(AppUser user, ReservationQuery query)
         {
+            var reservations = _context.Reservations.AsQueryable();
+            reservations = reservations.Where(x => x.AppUserId == user.Id);
+            if(query.isExpired)
+            {
+                reservations = reservations.Where(r => r.EndTime < DateTime.Now);
+            }
+            else
+            {
+                reservations = reservations.Where(r => r.EndTime >= DateTime.Now);
+            }
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await _context.Reservations.Where(x => x.AppUserId == user.Id).OrderBy(x => x.BeginTime).Include(r => r.Lane).ThenInclude(l => l.Alley).Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            return await reservations.OrderBy(x => x.BeginTime).Include(r => r.Lane).ThenInclude(l => l.Alley).Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Reservation?> UpdateAsync(int id, UpdateReservationRequestDto reserevationDto)

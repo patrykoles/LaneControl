@@ -18,7 +18,7 @@ namespace api.Interfaces
 
         Task<bool> CheckDates(Reservation reservationModel, int laneId);
 
-        Task<bool> CheckAvailability(Reservation reservationModel, int laneId);
+        Task<bool> CheckAvailability(Reservation reservationModel, int laneId, int? oldReservationId);
 
         Task<Reservation?> UpdateAsync(int id, UpdateReservationRequestDto reserevationDto);
 

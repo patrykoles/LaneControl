@@ -96,7 +96,7 @@ namespace api.Controllers
             {
                 return BadRequest("Podane godziny rezerwacji nie mieszczą się w godzinach otwarcia kręgielni!");
             }
-            if(!(await _reservationRepo.CheckAvailability(reservation, laneId)))
+            if(!(await _reservationRepo.CheckAvailability(reservation, laneId, null)))
             {
                 return BadRequest("Podane godziny rezerwacji nie są dostępne!");
             }
@@ -140,7 +140,7 @@ namespace api.Controllers
             {
                 return BadRequest("Podane godziny rezerwacji nie mieszczą się w godzinach otwarcia kręgielni!");
             }
-            if(!(await _reservationRepo.CheckAvailability(newReservation, oldReservation.LaneId)))
+            if(!(await _reservationRepo.CheckAvailability(newReservation, oldReservation.LaneId, oldReservation.Id)))
             {
                 return BadRequest("Podane godziny rezerwacji nie są dostępne!");
             }

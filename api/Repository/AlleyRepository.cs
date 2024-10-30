@@ -14,9 +14,11 @@ namespace api.Repository
     public class AlleyRepository : IAlleyRepository
     {
         private readonly ApplicationDBContext _context;
-        public AlleyRepository(ApplicationDBContext context)
+        private readonly ILaneRepository _laneRepo;
+        public AlleyRepository(ApplicationDBContext context, ILaneRepository laneRepo)
         {
             _context = context;
+            _laneRepo = laneRepo;
         }
 
         public async Task<bool> AlleyExists(int id)
@@ -41,7 +43,10 @@ namespace api.Repository
             }
 
             var lanes = await _context.Lanes.Where(x => x.AlleyId == id).ToListAsync();
-            _context.Lanes.RemoveRange(lanes);
+            foreach(var lane in lanes)
+            {
+                await _laneRepo.DeleteAsync(lane.Id);
+            }
 
             _context.Alleys.Remove(alleyModel);
             await _context.SaveChangesAsync();
