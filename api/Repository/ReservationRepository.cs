@@ -15,9 +15,11 @@ namespace api.Repository
     public class ReservationRepository : IReservationRepository
     {
         private readonly ApplicationDBContext _context;
-        public ReservationRepository(ApplicationDBContext context)
+        private readonly IOrderRepository _orderRepo;
+        public ReservationRepository(ApplicationDBContext context, IOrderRepository orderRepo)
         {
             _context = context;
+            _orderRepo = orderRepo;
         }
 
         public async Task<bool> CheckAvailability(Reservation reservationModel, int laneId, int? oldReservationId)
@@ -115,6 +117,12 @@ namespace api.Repository
             {
                 return null;
             }
+            var orders = await _context.Orders.Where(o => o.ReservationId == id).ToListAsync();
+            foreach(var order in orders)
+            {
+                await _orderRepo.DeleteAsync(order.Id);
+            }
+
             _context.Reservations.Remove(reservationModel);
             await _context.SaveChangesAsync();
 

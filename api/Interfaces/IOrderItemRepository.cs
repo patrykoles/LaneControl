@@ -9,5 +9,7 @@ namespace api.Interfaces
     public interface IOrderItemRepository
     {
         Task<OrderItem> CreateAsync(OrderItem orderItem);
+
+        Task<OrderItem?> DeleteAsync(OrderItem orderItem);
     }
 }

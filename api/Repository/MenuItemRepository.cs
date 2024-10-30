@@ -14,9 +14,11 @@ namespace api.Repository
     public class MenuItemRepository : IMenuItemRepository
     {
         private readonly ApplicationDBContext _context;
-        public MenuItemRepository(ApplicationDBContext context)
+        private readonly IOrderItemRepository _orderItemRepo;
+        public MenuItemRepository(ApplicationDBContext context, IOrderItemRepository orderItemRepo)
         {
             _context = context;
+            _orderItemRepo = orderItemRepo;
         }
 
         public async Task<MenuItem> CreateAsync(MenuItem menuItemModel)
@@ -32,6 +34,15 @@ namespace api.Repository
             if(menuItemModel == null)
             {
                 return null;
+            }
+            var originalItems = await _context.OrderItems.Where(oi => oi.MenuItemId == id).ToListAsync();
+            var orderItems = originalItems?.ToList();
+            if(orderItems != null)
+            {
+                foreach(var orderItem in orderItems)
+                {
+                    await _orderItemRepo.DeleteAsync(orderItem);
+                }
             }
             _context.Remove(menuItemModel);
             await _context.SaveChangesAsync();

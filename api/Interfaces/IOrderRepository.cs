@@ -16,5 +16,9 @@ namespace api.Interfaces
         Task<Order> CreateAsync(Order order);
 
         Task<Order?> UpdateSumAsync(int orderId, List<OrderItem> orderItems);
+
+        Task<Order?> DeleteAsync(int id);
+
+        bool CheckIfOrderHasBeenDelivered(Order order);
     }
 }

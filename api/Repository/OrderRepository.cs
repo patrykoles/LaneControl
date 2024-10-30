@@ -13,14 +13,41 @@ namespace api.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDBContext _context;
-        public OrderRepository(ApplicationDBContext context)
+        private readonly IOrderItemRepository _orderItemRepo;
+        public OrderRepository(ApplicationDBContext context, IOrderItemRepository orderItemRepo)
         {
             _context = context;
+            _orderItemRepo = orderItemRepo;
+        }
+
+        public bool CheckIfOrderHasBeenDelivered(Order order)
+        {
+            return (DateTime.Now > order.OrderTime.AddMinutes(10) || DateTime.Now < order.OrderTime);
         }
 
         public async Task<Order> CreateAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        public async Task<Order?> DeleteAsync(int id)
+        {
+            var order = await _context.Orders.Include(o => o.OrderItems).FirstOrDefaultAsync(o => o.Id == id);
+            if(order == null)
+            {
+                return null;
+            }
+            var orderItems = order.OrderItems?.ToList();
+            if(orderItems != null)
+            {
+                foreach(var orderItem in orderItems)
+                {
+                    await _orderItemRepo.DeleteAsync(orderItem);
+                }
+            }
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return order;
         }

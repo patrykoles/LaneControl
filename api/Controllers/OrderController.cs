@@ -12,6 +12,7 @@ using api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers
 {
@@ -115,6 +116,11 @@ namespace api.Controllers
             {
                 return BadRequest("Zamówień można dokonywać tylko dla aktualnej rezerwacji do 15 minut przed jej zakończeniem!");
             }
+            var orderItemDtos = orderDto.orderItemRequests;
+            if(orderItemDtos.IsNullOrEmpty())
+            {
+                return BadRequest("Nie można złozyć pustego zamówienia!");
+            }
             var order = new Order
             {
                 SumPrice = 0,
@@ -123,7 +129,7 @@ namespace api.Controllers
 
             var createdOrder = await _orderRepo.CreateAsync(order);
 
-            var orderItemDtos = orderDto.orderItemRequests;
+            
 
             var orderItems = orderItemDtos.Select(oi => oi.ToOrderItemFromCreateOrderItemRequestDto(createdOrder.Id)).ToList();
 
@@ -138,7 +144,11 @@ namespace api.Controllers
                 }
                 catch(Exception e)
                 {
-                    //TO DO: Usuwanie order_item i order
+                    foreach(var oi in createdOrderItems)
+                    {
+                        await _orderItemRepo.DeleteAsync(oi);
+                    }
+                    await _orderRepo.DeleteAsync(createdOrder.Id);
                     return BadRequest(e.Message);
                 }
             }
@@ -152,6 +162,42 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = createdOrder.Id }, createdOrder.ToOrderDto(createdOrderItems.Select(oi => oi.ToOrderItemDto()).ToList()));
             
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        [Authorize]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if(appUser == null)
+            {
+                return Forbid();
+            }
+            var order = await _orderRepo.GetByIdAsync(id);
+            if(order == null)
+            {
+                return NotFound();
+            }
+            if(order.Reservation.AppUserId != appUser.Id)
+            {
+                return Forbid();
+            }
+            if(_orderRepo.CheckIfOrderHasBeenDelivered(order))
+            {
+                return BadRequest("Możesz anulować zamówienie tylko w ciągu pierwszych 10 minut od jego złożenia");
+            }
+            var deletedOrder = await _orderRepo.DeleteAsync(id);
+
+            if(deletedOrder == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

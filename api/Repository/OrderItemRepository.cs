@@ -28,5 +28,17 @@ namespace api.Repository
             await _context.SaveChangesAsync();
             return orderItem;
         }
+
+        public async Task<OrderItem?> DeleteAsync(OrderItem orderItem)
+        {
+            var existingItem = await _context.OrderItems.FirstOrDefaultAsync(oi => oi.OrderId == orderItem.OrderId && oi.MenuItemId == orderItem.MenuItemId);
+            if(existingItem == null)
+            {
+                return null;
+            }
+            _context.OrderItems.Remove(existingItem);
+            await _context.SaveChangesAsync();
+            return existingItem;
+        }
     }
 }
