@@ -25,5 +25,7 @@ namespace api.Interfaces
         bool CheckIfDateIsNotInThePast(Reservation reservationModel);
 
         Task<Reservation?> DeleteAsync(int id);
+
+        bool CheckIfReservationIsOngoing(Reservation reservationModel);
     }
 }

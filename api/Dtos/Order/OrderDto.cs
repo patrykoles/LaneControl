@@ -1,25 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.OrderItem;
 
-namespace api.Models
+namespace api.Dtos.Order
 {
-    [Table("Order")]
-    public class Order
+    public class OrderDto
     {
         public int Id { get; set; }
 
-        [Column(TypeName = "decimal(8,2)")]
         public decimal SumPrice { get; set; }
 
         public DateTime OrderTime { get; set; } = DateTime.Now;
 
         public int ReservationId { get; set; }
 
-        public Reservation? Reservation { get; set; }
-
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
     }
 }

@@ -96,6 +96,11 @@ namespace api.Repository
             return reservationModel.BeginTime > DateTime.Now;
         }
 
+        public bool CheckIfReservationIsOngoing(Reservation reservationModel)
+        {
+            return (reservationModel.BeginTime <= DateTime.Now && reservationModel.EndTime >= DateTime.Now.AddMinutes(15));
+        }
+
         public async Task<Reservation> CreateAsync(Reservation reservationModel)
         {
             await _context.Reservations.AddAsync(reservationModel);

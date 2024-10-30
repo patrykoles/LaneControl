@@ -112,6 +112,7 @@ builder.Services.AddScoped<ILaneRepository, LaneRepository>();
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
 var app = builder.Build();
 
