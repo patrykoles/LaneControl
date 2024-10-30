@@ -24,6 +24,15 @@ namespace api.Repository
             {
                 throw new EntityAlreadyExistsException("Nie można dodawać kilka razy tej samej pozycji z Menu w jednym zamówieniu");
             }
+            var menuItem = await _context.MenuItems.FirstOrDefaultAsync(mi => mi.Id == orderItem.MenuItemId);
+            if(menuItem == null)
+            {
+                throw new MenuItemDoesNotExistException("Taka pozycja w menu nie istieje!");
+            }
+            if(menuItem.CurrentPrice != orderItem.Price)
+            {
+                throw new PricesDoNotMatchException("Podana cena nie zgadza się z aktualną ceną produktu w Menu!");
+            }
             await _context.OrderItems.AddAsync(orderItem);
             await _context.SaveChangesAsync();
             return orderItem;
