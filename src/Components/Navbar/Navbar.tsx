@@ -12,7 +12,7 @@ const Navbar = (props: Props) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-20">
         <Link to="/">
-          <img src={logo} alt="" />
+          <img src={logo} alt="" className="w-16 h-16"/>
           </Link>
           <Link to="/home">
           <div className="hidden font-bold lg:flex">
@@ -25,7 +25,7 @@ const Navbar = (props: Props) => {
         {isLoggedIn() ? (
                 <div className="hidden lg:flex items-center space-x-6 text-back">
             
-              <div className="hover:text-darkBlue">Welcome, {user?.userName}</div>
+              <div>Welcome, {user?.userName}</div>
              
              
               <a
