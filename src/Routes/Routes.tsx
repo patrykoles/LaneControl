@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
             {path: "register", element: <RegisterPage />},
             {path: "home", element: <ProtectedRoutes><HomePage /></ProtectedRoutes>},
             {path: "addalley", element: <ProtectedRoutes><CreateAlleyPage /></ProtectedRoutes>},
-            {path: "updatealley", element: <ProtectedRoutes><UpdateAlleyPage /></ProtectedRoutes>}
+            {path: "updatealley/:alleyid", element: <ProtectedRoutes><UpdateAlleyPage /></ProtectedRoutes>}
         ]
     }
 ])
