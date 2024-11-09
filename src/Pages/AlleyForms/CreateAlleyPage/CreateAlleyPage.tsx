@@ -1,28 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import * as Yup from "yup";
+import { alleyPostAPI } from '../../../Services/AlleyService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 type Props = {}
 
+type CreateAlleyFormInputs = {
+  name: string;
+  city: string;
+  address: string;
+  openingTime: string;
+  closingTime: string;
+};
+
+const validation = Yup.object().shape({
+  name: Yup.string().required("Name is required!"),
+  city: Yup.string().required("City is required!"),
+  address: Yup.string().required("Address  is required!"),
+  openingTime: Yup.string().required("Opening time is required!"),
+  closingTime: Yup.string().required("Closing time is required!")
+});
+
 const CreateAlleyPage = (props: Props) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    city: '',
-    address: '',
-    openingTime: '',
-    closingTime: ''
-  });
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleAlley = (e: CreateAlleyFormInputs) => {
+    alleyPostAPI(e.name, e.city, e.address, e.openingTime, e.closingTime)
+      .then((res) => {
+        if (res) {
+          toast.success("Alley created successfully!");
+          navigate("/home");
+        }
+      })
+      .catch((e) => {
+        toast.warning(e);
+      });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // tutaj można dodać logikę wysyłania formularza
-    console.log(formData);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateAlleyFormInputs>({ resolver: yupResolver(validation) });
   return (
-    <form className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg" onSubmit={handleSubmit}>
+    <form className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg" onSubmit={handleSubmit(handleAlley)}>
       <h2 className="text-2xl font-bold text-center mb-6">Create New Alley</h2>
 
       <div className="mb-4">
@@ -30,12 +54,10 @@ const CreateAlleyPage = (props: Props) => {
         <input
           type="text"
           id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
           className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          {...register("name")}
         />
+        {errors.name ? <p>{errors.name.message}</p> : ""}
       </div>
 
       <div className="mb-4">
@@ -43,12 +65,10 @@ const CreateAlleyPage = (props: Props) => {
         <input
           type="text"
           id="city"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
           className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          {...register("city")}
         />
+        {errors.city ? <p>{errors.city.message}</p> : ""}
       </div>
 
       <div className="mb-4">
@@ -56,12 +76,10 @@ const CreateAlleyPage = (props: Props) => {
         <input
           type="text"
           id="address"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
           className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          {...register("address")}
         />
+        {errors.address ? <p>{errors.address.message}</p> : ""}
       </div>
 
       <div className="mb-4">
@@ -69,12 +87,10 @@ const CreateAlleyPage = (props: Props) => {
         <input
           type="time"
           id="openingTime"
-          name="openingTime"
-          value={formData.openingTime}
-          onChange={handleChange}
           className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          {...register("openingTime")}
         />
+        {errors.openingTime ? <p>{errors.openingTime.message}</p> : ""}
       </div>
 
       <div className="mb-6">
@@ -82,12 +98,10 @@ const CreateAlleyPage = (props: Props) => {
         <input
           type="time"
           id="closingTime"
-          name="closingTime"
-          value={formData.closingTime}
-          onChange={handleChange}
           className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          {...register("closingTime")}
         />
+        {errors.closingTime ? <p>{errors.closingTime.message}</p> : ""}
       </div>
 
       <div className="flex justify-center">

@@ -52,7 +52,7 @@ export const alleyGetAPI = async (id: number) => {
     closingTime: string
   ) => {
     try {
-      const data = await axios.post<AlleyPost>(api + `alley/${id}`, {
+      const data = await axios.put<AlleyPost>(api + `alley/${id}`, {
         name: name,
         city: city,
         address: address,
@@ -64,3 +64,12 @@ export const alleyGetAPI = async (id: number) => {
       handleError(error);
     }
   };
+
+export const alleyDeleteAPI = async (id: number) => {
+  try {
+    const data = await axios.delete<AlleyPost>(api + `alley/${id}`);
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
