@@ -30,6 +30,9 @@ export const handleError = (error: any) => {
             // Obsługa błędu 401 (brak autoryzacji)
             toast.warning("Please login");
             window.history.pushState({}, "LoginPage", "/login");
+        }else if (err?.status === 404) {
+            // Obsługa błędu 404
+            toast.warning("Not found");
         } else {
             // Obsługa dla nieoczekiwanych błędów
             toast.warning("An unexpected error occurred.");

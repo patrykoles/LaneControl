@@ -21,6 +21,13 @@ const Navbar = (props: Props) => {
             </a>
           </div>
           </Link>
+          <Link to="/menu">
+          <div className="hidden font-bold lg:flex">
+            <a href="" className="text-black hover:text-darkBlue">
+              Menu
+            </a>
+          </div>
+          </Link>
         </div>
         {isLoggedIn() ? (
                 <div className="hidden lg:flex items-center space-x-6 text-back">

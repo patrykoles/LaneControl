@@ -13,14 +13,18 @@ export const alleyGetAPI = async (id: number) => {
     }
   };
 
-  export const alleyGetAllAPI = async () => {
+  export const alleyGetAllAPI = async (name = "", city = "") => {
     try {
-      const data = await axios.get<AlleyGet[]>(api + `alley`);
-      return data;
+        const queryParams: Record<string, string> = {};
+        if (name) queryParams.name = name;
+        if (city) queryParams.city = city;
+        
+        const data = await axios.get<AlleyGet[]>(`${api}alley`, { params: queryParams });
+        return data;
     } catch (error) {
-      handleError(error);
+        handleError(error);
     }
-  };
+};
 
   export const alleyPostAPI = async (
     name: string,
