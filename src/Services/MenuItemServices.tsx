@@ -17,7 +17,7 @@ export const menuItemGetAPI = async (id: number) => {
     try {
         const queryParams: Record<string, string> = {};
         if (name) queryParams.name = name;
-        if (category) queryParams.city = category;
+        if (category) queryParams.category = category;
         
         const data = await axios.get<MenuItemGet[]>(`${api}menuitem`, { params: queryParams });
         return data;
@@ -30,7 +30,7 @@ export const menuItemGetAPI = async (id: number) => {
     name: string,
     description: string,
     category: string,
-    currentPrice: string
+    currentPrice: number
   ) => {
     try {
       const data = await axios.post<MenuItemPost>(api + `menuitem`, {
@@ -50,7 +50,7 @@ export const menuItemGetAPI = async (id: number) => {
     name: string,
     description: string,
     category: string,
-    currentPrice: string
+    currentPrice: number
   ) => {
     try {
       const data = await axios.put<MenuItemPost>(api + `menuitem/${id}`, {

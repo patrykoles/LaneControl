@@ -11,6 +11,8 @@ import AlleyDetailsPage from "../Pages/AlleyDetailsPage/AlleyDetailsPage";
 import CreateLanePage from "../Pages/LaneForms/CreateLanePage/CreateLanePage";
 import UpdateLanePage from "../Pages/LaneForms/UpdateLanePage/UpdateLanePage";
 import MenuPage from "../Pages/MenuPage/MenuPage";
+import CreateMenuItemPage from "../Pages/MenuItemForms/CreateMenuItemPage/CreateMenuItemPage";
+import UpdateMenuItemPage from "../Pages/MenuItemForms/UpdateMenuItemPage/UpdateMenuItemPage";
 
 export const router = createBrowserRouter([
     {
@@ -26,7 +28,9 @@ export const router = createBrowserRouter([
             {path: "alleydetails/:alleyid", element: <ProtectedRoutes><AlleyDetailsPage /></ProtectedRoutes>},
             {path: "addlane/:alleyid", element: <ProtectedRoutes><CreateLanePage /></ProtectedRoutes>},
             {path: "updatelane/:alleyid/:id", element: <ProtectedRoutes><UpdateLanePage /></ProtectedRoutes>},
-            {path: "menu", element: <ProtectedRoutes><MenuPage /></ProtectedRoutes>} 
+            {path: "menu", element: <ProtectedRoutes><MenuPage /></ProtectedRoutes>},
+            {path: "addmenuitem", element: <ProtectedRoutes><CreateMenuItemPage /></ProtectedRoutes>},
+            {path: "updatemenuitem/:id", element: <ProtectedRoutes><UpdateMenuItemPage /></ProtectedRoutes>}, 
         ]
     }
 ])
