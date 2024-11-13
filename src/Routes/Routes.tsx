@@ -13,6 +13,8 @@ import UpdateLanePage from "../Pages/LaneForms/UpdateLanePage/UpdateLanePage";
 import MenuPage from "../Pages/MenuPage/MenuPage";
 import CreateMenuItemPage from "../Pages/MenuItemForms/CreateMenuItemPage/CreateMenuItemPage";
 import UpdateMenuItemPage from "../Pages/MenuItemForms/UpdateMenuItemPage/UpdateMenuItemPage";
+import CreateReservationPage from "../Pages/ReservationForms/CreateReservationPage/CreateReservationPage";
+import ReservationsPage from "../Pages/ReservationsPage/ReservationsPage";
 
 export const router = createBrowserRouter([
     {
@@ -30,7 +32,9 @@ export const router = createBrowserRouter([
             {path: "updatelane/:alleyid/:id", element: <ProtectedRoutes><UpdateLanePage /></ProtectedRoutes>},
             {path: "menu", element: <ProtectedRoutes><MenuPage /></ProtectedRoutes>},
             {path: "addmenuitem", element: <ProtectedRoutes><CreateMenuItemPage /></ProtectedRoutes>},
-            {path: "updatemenuitem/:id", element: <ProtectedRoutes><UpdateMenuItemPage /></ProtectedRoutes>}, 
+            {path: "updatemenuitem/:id", element: <ProtectedRoutes><UpdateMenuItemPage /></ProtectedRoutes>},
+            {path: "addreservation/:alleyid", element: <ProtectedRoutes><CreateReservationPage /></ProtectedRoutes>},
+            {path: "reservations", element: <ProtectedRoutes><ReservationsPage /></ProtectedRoutes>}, 
         ]
     }
 ])

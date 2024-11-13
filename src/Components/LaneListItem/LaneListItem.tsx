@@ -33,9 +33,6 @@ const LaneListItem = ({ lane }: Props) => {
         Delete
       </button>
       </form>
-      <button className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 text-sm">
-        Make Reservation
-      </button>
     </div>
   </div>
   
