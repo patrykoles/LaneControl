@@ -27,5 +27,7 @@ namespace api.Interfaces
         Task<Reservation?> DeleteAsync(int id);
 
         bool CheckIfReservationIsOngoing(Reservation reservationModel);
+
+        Task<List<Lane>> FindAvailableLanes(Reservation? resevationModel, int alleyId, AppUser user, DateTime beginTime, DateTime endTime);
     }
 }

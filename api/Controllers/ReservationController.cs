@@ -87,6 +87,12 @@ namespace api.Controllers
             {
                 return BadRequest("Taki tor nie istnieje!");
             }
+            if (reservationDto.BeginTime.Minute != 0 || reservationDto.BeginTime.Second != 0 || reservationDto.BeginTime.Millisecond != 0 ||
+                reservationDto.EndTime.Minute != 59 || reservationDto.EndTime.Second != 0 || reservationDto.EndTime.Millisecond != 0)
+            {
+                return BadRequest("BeginTime musi mieć minuty, sekundy i milisekundy ustawione na 00, a EndTime minuty na 59 oraz sekundy i milisekundy na 00.");
+            }
+
             var reservation = reservationDto.ToReservationFromCreateReservationRequestDto(laneId, appUser.Id);
             if(!(_reservationRepo.CheckIfDateIsNotInThePast(reservation)))
             {
@@ -127,11 +133,23 @@ namespace api.Controllers
             {
                 return Forbid();
             }
+            
             var newReservation = reservationDto.ToReservationFromUpdateReservationRequestDto(oldReservation.LaneId, appUser.Id);
             if(!(_reservationRepo.CheckIfDateIsNotInThePast(oldReservation)))
             {
                 return BadRequest("Nie można zmieniać rezerwacji która już się odbyła!");
             }
+            reservationDto.BeginTime = reservationDto.BeginTime
+                .AddSeconds(-reservationDto.BeginTime.Second)
+                .AddMilliseconds(-reservationDto.BeginTime.Millisecond);
+            reservationDto.EndTime = reservationDto.EndTime
+                .AddSeconds(-reservationDto.EndTime.Second)
+                .AddMilliseconds(-reservationDto.EndTime.Millisecond);
+            if (reservationDto.BeginTime.Minute != 0 || reservationDto.EndTime.Minute != 59)
+            {
+                return BadRequest("BeginTime musi mieć minuty, sekundy i milisekundy ustawione na 00, a EndTime minuty na 59 oraz sekundy i milisekundy na 00.");
+            }
+
             if(!(_reservationRepo.CheckIfDateIsNotInThePast(newReservation)))
             {
                 return BadRequest("Nie można dokonać rezerwacji w przeszłości!");
@@ -188,6 +206,32 @@ namespace api.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("availablelanes/{alleyId:int}")]
+        [Authorize]
+        public async Task<IActionResult> findAvailableLanes([FromRoute] int alleyId, [FromBody] FindAvailableLanesRequestDto findData)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if(appUser == null)
+            {
+                return Forbid();
+            }
+            Reservation? reservationModel = null;
+            if(findData.reservationId != null){
+                reservationModel = await _reservationRepo.GetByIdAsync((int)findData.reservationId);
+            }
+            if(reservationModel != null && reservationModel.AppUserId != appUser.Id)
+            {
+                return Forbid();
+            }
+            var lanes = await _reservationRepo.FindAvailableLanes(reservationModel, alleyId, appUser, findData.beginTime, findData.endTime);
+            var laneDtos = lanes.Select(l => l.ToLaneDto()).ToList();
+            return Ok(laneDtos);
         }
     }
 }

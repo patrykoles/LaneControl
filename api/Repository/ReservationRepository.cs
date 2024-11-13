@@ -33,8 +33,8 @@ namespace api.Repository
             var endHours = reservationModel.EndTime.TimeOfDay;
 
             return !await _context.Reservations.AnyAsync(r => r.Id != oldReservationId && r.LaneId == laneId 
-                && ((r.BeginTime.TimeOfDay > beginHours && r.BeginTime.TimeOfDay < endHours)
-                ||(r.EndTime.TimeOfDay > beginHours && r.EndTime.TimeOfDay < endHours)));
+                && (((r.BeginTime.Date == reservationModel.BeginTime.Date)&&(r.BeginTime.TimeOfDay >= beginHours && r.BeginTime.TimeOfDay <= endHours))
+                ||((r.EndTime.Date == reservationModel.EndTime.Date)&&(r.EndTime.TimeOfDay >= beginHours && r.EndTime.TimeOfDay <= endHours))));
 
         }
 
@@ -127,6 +127,40 @@ namespace api.Repository
             await _context.SaveChangesAsync();
 
             return reservationModel;
+        }
+
+        public async Task<List<Lane>> FindAvailableLanes(Reservation? reservationModel, int alleyId, AppUser user, DateTime beginTime, DateTime endTime)
+        {
+            List<Lane> lanes = new List<Lane>();
+            var alleyModel = await _context.Alleys.FirstOrDefaultAsync(a => a.Id == alleyId);
+            if(alleyModel == null)
+            {
+                return lanes;
+            }
+            var beginTimeHours = beginTime.TimeOfDay;
+            var endTimeHours = endTime.TimeOfDay;
+            if(
+                (alleyModel.ClosingTime > alleyModel.OpeningTime && beginTimeHours < alleyModel.OpeningTime && beginTimeHours < alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime > alleyModel.OpeningTime && endTimeHours < alleyModel.OpeningTime && endTimeHours < alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime > alleyModel.OpeningTime && beginTimeHours > alleyModel.OpeningTime && beginTimeHours > alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime > alleyModel.OpeningTime && endTimeHours > alleyModel.OpeningTime && endTimeHours > alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime < alleyModel.OpeningTime && beginTimeHours < alleyModel.OpeningTime && beginTimeHours > alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime < alleyModel.OpeningTime && endTimeHours < alleyModel.OpeningTime && endTimeHours > alleyModel.ClosingTime) ||
+                (alleyModel.ClosingTime > alleyModel.OpeningTime && beginTime.Date != endTime.Date) ||
+                (alleyModel.ClosingTime < alleyModel.OpeningTime && !((beginTime.Date != endTime.Date) || (beginTime.AddDays(1).Date != endTime.Date)))
+            )
+            {
+                return lanes;
+            }
+            var laneIds = await _context.Lanes.Where(l => l.AlleyId == alleyId).Select(l => l.Id).ToListAsync();
+            var reservationLaneIds = await _context.Reservations
+                .Where(r => laneIds.Contains(r.LaneId) 
+                && ((r.BeginTime < r.EndTime && ((beginTime >= r.BeginTime && beginTime <= r.EndTime) || (endTime >= r.BeginTime && endTime <= r.EndTime)))
+                ||(r.BeginTime > r.EndTime && (beginTime >= r.BeginTime || endTime <= r.EndTime))) 
+                && (reservationModel == null || r.Id != reservationModel.Id))
+                .Select(r => r.LaneId).Distinct().ToListAsync();
+            var newLanes = await _context.Lanes.Where(l => !reservationLaneIds.Contains(l.Id) && l.AlleyId == alleyId).ToListAsync();
+            return newLanes;
         }
 
         public async Task<Reservation?> GetByIdAsync(int id)
