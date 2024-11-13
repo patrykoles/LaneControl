@@ -139,13 +139,8 @@ namespace api.Controllers
             {
                 return BadRequest("Nie można zmieniać rezerwacji która już się odbyła!");
             }
-            reservationDto.BeginTime = reservationDto.BeginTime
-                .AddSeconds(-reservationDto.BeginTime.Second)
-                .AddMilliseconds(-reservationDto.BeginTime.Millisecond);
-            reservationDto.EndTime = reservationDto.EndTime
-                .AddSeconds(-reservationDto.EndTime.Second)
-                .AddMilliseconds(-reservationDto.EndTime.Millisecond);
-            if (reservationDto.BeginTime.Minute != 0 || reservationDto.EndTime.Minute != 59)
+            if (reservationDto.BeginTime.Minute != 0 || reservationDto.BeginTime.Second != 0 || reservationDto.BeginTime.Millisecond != 0 ||
+                reservationDto.EndTime.Minute != 59 || reservationDto.EndTime.Second != 0 || reservationDto.EndTime.Millisecond != 0)
             {
                 return BadRequest("BeginTime musi mieć minuty, sekundy i milisekundy ustawione na 00, a EndTime minuty na 59 oraz sekundy i milisekundy na 00.");
             }
@@ -222,14 +217,14 @@ namespace api.Controllers
                 return Forbid();
             }
             Reservation? reservationModel = null;
-            if(findData.reservationId != null){
-                reservationModel = await _reservationRepo.GetByIdAsync((int)findData.reservationId);
+            if(findData.ReservationId != null){
+                reservationModel = await _reservationRepo.GetByIdAsync((int)findData.ReservationId);
             }
             if(reservationModel != null && reservationModel.AppUserId != appUser.Id)
             {
                 return Forbid();
             }
-            var lanes = await _reservationRepo.FindAvailableLanes(reservationModel, alleyId, appUser, findData.beginTime, findData.endTime);
+            var lanes = await _reservationRepo.FindAvailableLanes(reservationModel, alleyId, appUser, findData.BeginTime, findData.EndTime);
             var laneDtos = lanes.Select(l => l.ToLaneDto()).ToList();
             return Ok(laneDtos);
         }

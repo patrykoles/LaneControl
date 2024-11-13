@@ -9,12 +9,12 @@ namespace api.Dtos.Reservation
     public class FindAvailableLanesRequestDto
     {
         [Required]
-        public DateTime beginTime { get; set; }
+        public DateTime BeginTime { get; set; }
 
         [Required]
-        public DateTime endTime { get; set; }
+        public DateTime EndTime { get; set; }
 
-        public int? reservationId { get; set; }= null;
+        public int? ReservationId { get; set; }= null;
 
     }
 }

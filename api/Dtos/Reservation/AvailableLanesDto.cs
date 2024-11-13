@@ -8,6 +8,6 @@ namespace api.Dtos.Reservation
 {
     public class AvailableLanesDto
     {
-        public List<LaneDto> lanes { get; set; } = new List<LaneDto>();
+        public List<LaneDto> Lanes { get; set; } = new List<LaneDto>();
     }
 }
