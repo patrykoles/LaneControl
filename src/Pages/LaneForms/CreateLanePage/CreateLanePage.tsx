@@ -33,14 +33,20 @@ const CreateLanePage = (props: Props) => {
       .catch((e) => {
         toast.warning(e);
       });
-  };
+    };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateLaneFormInputs>({ resolver: yupResolver(validation) });
+
+  const handleBackClick = () => {
+    navigate(`/alleydetails/${alleyid}`); 
+};
+
   return (
+    <>
     <form className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg" onSubmit={handleSubmit(handleLane)}>
   <h2 className="text-2xl font-bold text-center mb-6">Create New Lane</h2>
 
@@ -75,6 +81,15 @@ const CreateLanePage = (props: Props) => {
     </button>
   </div>
 </form>
+<div className="flex justify-center mt-4 my-5">
+        <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
+        >
+            <span>Cancel</span>
+        </button>
+        </div>
+</>
   )
 }
 

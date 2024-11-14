@@ -68,7 +68,12 @@ const UpdateMenuItemPage = (props: Props) => {
       setValue("currentPrice", menuItem.currentPrice);
     }
   }, [menuItem, setValue]);
+
+  const handleBackClick = () => {
+    navigate(`/menu`);
+};
   return (
+    <>
     <form className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg" onSubmit={handleSubmit(handleMenuItem)}>
       <h2 className="text-2xl font-bold text-center mb-6">Create New Menu Item</h2>
 
@@ -132,6 +137,15 @@ const UpdateMenuItemPage = (props: Props) => {
         </button>
       </div>
     </form>
+    <div className="flex justify-center mt-4 my-5">
+        <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
+        >
+            <span>Cancel</span>
+        </button>
+        </div>
+    </>
   );
 }
 

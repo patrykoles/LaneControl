@@ -99,6 +99,10 @@ const CreateReservationPage = (props: Props) => {
   } = useForm<CreateReservationFormInputs>({ resolver: yupResolver(validation) });
 
   const formData = watch();
+
+  const handleBackClick = () => {
+    navigate(`/alleydetails/${alleyid}`);  // Goes back to the previous page
+};
   return (
     <>
     {alley && (
@@ -146,6 +150,14 @@ const CreateReservationPage = (props: Props) => {
         </button>
       </form>
     </div>
+    <div className="flex justify-center mt-4 my-5">
+        <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
+        >
+            <span>Cancel</span>
+        </button>
+        </div>
     {lanes.length > 0 ? (
         <AvailableLanesList lanes={lanes} formData={formData} handleReservation={handleReservation} reservationId={null}/>
       ) : (<div className="flex justify-center mb-6">

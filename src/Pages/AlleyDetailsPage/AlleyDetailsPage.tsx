@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { alleyGetAPI } from '../../Services/AlleyService';
 import { AlleyGet } from '../../Models/Alley';
 import AlleyDetails from '../../Components/AlleyDetails/AlleyDetails';
@@ -36,6 +36,12 @@ const getLanes = () => {
         setAlley(res?.data!);
     });
   };
+
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(`/home`); 
+  };
+
   return (
     <>
       {alley ? (
@@ -47,6 +53,12 @@ const getLanes = () => {
             Make Reservation
           </button>
           </Link>
+        <button
+            onClick={handleBackClick}
+            className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 mx-3"
+        >
+            <span>Back</span>
+        </button>
           </div>
           {lanes ? (
             <LaneList lanes={lanes} />

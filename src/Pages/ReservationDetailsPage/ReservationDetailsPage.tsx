@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { reservationGetAPI } from '../../Services/ReservationServices';
 import { ReservationGet } from '../../Models/Reservation';
 import { OrderGet } from '../../Models/Order';
@@ -38,6 +38,10 @@ const getOrders = () => {
       };
 
       const isReservationActive = reservation && new Date(reservation.endTime).getTime() > new Date().getTime();
+      const navigate = useNavigate();
+      const handleBackClick = () => {
+        navigate("/reservations");  // Goes back to the previous page
+    };
       return (
         <>
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -74,6 +78,14 @@ const getOrders = () => {
           </Link>
           </div> 
         )}
+        <div className="flex justify-center mt-4 my-5">
+        <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
+        >
+            <span>Back</span>
+        </button>
+        </div>
         {orders.length > 0 ? (
             <OrderList orders={orders} />
           ) : (

@@ -10,8 +10,8 @@ const OrderList = ({ orders }: Props) => {
     return (
         <div>
           {orders
-            ? orders.map((order) => {
-                return <OrderListItem order={order} />;
+            ? orders.map((order, index) => {
+                return <OrderListItem order={order} orderNumber={index+1}/>;
               })
             : ""}
         </ div>
