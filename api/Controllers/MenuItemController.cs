@@ -50,7 +50,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateMenuItemRequestDto menuItemDto)
         {
             Console.WriteLine("Current Price Value: {0}", menuItemDto.CurrentPrice);
@@ -64,7 +64,7 @@ namespace api.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMenuItemRequestDto menuItemDto)
         {
             if(!ModelState.IsValid)
@@ -79,7 +79,7 @@ namespace api.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if(!ModelState.IsValid)

@@ -56,7 +56,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateAlleyRequestDto alleyDto)
         {
             if(!ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace api.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlleyRequestDto updateDto)
         {
             if(!ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace api.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if(!ModelState.IsValid)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Lane;
@@ -56,7 +57,7 @@ namespace api.Controllers
 
         [HttpPost]
         [Route("{alleyId:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromRoute] int alleyId, [FromBody] CreateLaneRequestDto laneDto)
         {
             if(!ModelState.IsValid)
@@ -79,7 +80,7 @@ namespace api.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateLaneRequestDto laneDto)
         {
             if(!ModelState.IsValid)
@@ -101,7 +102,7 @@ namespace api.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if(!ModelState.IsValid)

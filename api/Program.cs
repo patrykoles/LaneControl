@@ -106,6 +106,8 @@ builder.Services.AddAuthentication(options => {
     };
 });
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IAlleyRepository, AlleyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILaneRepository, LaneRepository>();
