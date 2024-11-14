@@ -3,12 +3,14 @@ import { MenuItemGet } from '../../Models/MenuItem'
 import { menuItemDeleteAPI } from '../../Services/MenuItemServices';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../Context/UseAuth';
 
 type Props = {
     menuItem: MenuItemGet;
 }
 
 const MenuItemListItem = ({ menuItem }: Props) => {
+  const {isAdmin} = useAuth();
     const deleteMenuItem = () => {
         menuItemDeleteAPI(menuItem.id).then((res) => {
             if (res?.status == 204) {
@@ -37,6 +39,7 @@ const MenuItemListItem = ({ menuItem }: Props) => {
             <span className="text-xl font-semibold text-gray-800">
               {menuItem.currentPrice.toFixed(2)} PLN
             </span>
+            { isAdmin ? (
             <div className="space-x-2">
               {/* Link do edytowania pozycji */}
               <Link to={`/updatemenuitem/${menuItem.id}`}>
@@ -54,6 +57,7 @@ const MenuItemListItem = ({ menuItem }: Props) => {
                 </button>
               </form>
             </div>
+            ) : "" }
           </div>
         </div>
       );

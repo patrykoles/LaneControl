@@ -3,12 +3,14 @@ import { AlleyGet } from '../../Models/Alley'
 import { Link } from 'react-router-dom';
 import { alleyDeleteAPI } from '../../Services/AlleyService';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../Context/UseAuth';
 
 type Props = {
     alley: AlleyGet;
 }
 
 const AlleyListItem = ({ alley }: Props) => {
+    const {isAdmin} = useAuth();
     const deleteAlley = () => {
         alleyDeleteAPI(alley.id).then((res) => {
             if (res?.status == 204) {
@@ -29,12 +31,16 @@ const AlleyListItem = ({ alley }: Props) => {
         </div>
 
         <div className="mt-6 flex space-x-4">
+            {isAdmin ? (
+            <>
             <Link to={`/updatealley/${alley.id}`}>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Edit</button>
             </Link>
             <form onSubmit={deleteAlley}>
             <button type='submit' className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete</button>
             </form>
+            </>
+            ) : ""}
             <Link to={`/alleydetails/${alley.id}`}>
             <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Browse</button>
             </Link>

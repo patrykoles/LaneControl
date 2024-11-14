@@ -6,7 +6,7 @@ import { useAuth } from '../../Context/UseAuth';
 interface Props {}
 
 const Navbar = (props: Props) => {
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user, logout, isAdmin } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -26,7 +26,9 @@ const Navbar = (props: Props) => {
           <div className="hidden lg:flex space-x-8 font-bold">
             <Link to="/home" className="text-black hover:text-darkBlue">Home</Link>
             <Link to="/menu" className="text-black hover:text-darkBlue">Offer</Link>
+            {!isAdmin ? (
             <Link to="/reservations" className="text-black hover:text-darkBlue">Reservations</Link>
+            ) : ""}
           </div>
         </div>
 
@@ -67,7 +69,9 @@ const Navbar = (props: Props) => {
         <div className="lg:hidden mt-4 space-y-4">
           <Link to="/home" onClick={toggleMobileMenu} className="block text-black hover:text-darkBlue">Home</Link>
           <Link to="/menu" onClick={toggleMobileMenu} className="block text-black hover:text-darkBlue">Offer</Link>
+          {!isAdmin ? (
           <Link to="/reservations" onClick={toggleMobileMenu} className="block text-black hover:text-darkBlue">Reservations</Link>
+          ) : ""}
           
           {isLoggedIn() ? (
             <>

@@ -3,6 +3,7 @@ import { AlleyGet } from '../../Models/Alley'
 import { alleyGetAllAPI } from '../../Services/AlleyService';
 import AlleyList from '../AlleyList/AlleyList';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../Context/UseAuth';
 
 type Props = {}
 
@@ -10,6 +11,7 @@ const Alley = (props: Props) => {
     const [alleys, setAlleys] = useState<AlleyGet[] | null>(null);
     const [name, setName] = useState("");
     const [city, setCity] = useState("");
+    const { isAdmin } = useAuth();
 
     useEffect(() => {
         getAlleys();
@@ -53,11 +55,13 @@ const Alley = (props: Props) => {
         {alleys ? (
           <>
           <AlleyList alleys={alleys!} />
+          {isAdmin ? (
           <div className="flex justify-center mt-4 my-5">
           <Link to={`/addalley`}>
               <button className="bg-white text-blue-500 border-2 border-blue-500 px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white hover:border-blue-600">Add New Alley</button>
           </Link>
           </div> 
+          ) : ""}
           </>
         ) : ""}
     </div>
