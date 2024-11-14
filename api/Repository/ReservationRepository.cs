@@ -78,7 +78,7 @@ namespace api.Repository
                 {
                     return false;
                 }
-                if(!(beginHours > openingTime && beginHours < closingTime) || !(endHours < closingTime && endHours > openingTime))
+                if(!(beginHours > openingTime || beginHours < closingTime) || !(endHours < closingTime || endHours > openingTime))
                 {
                     return false;
                 }

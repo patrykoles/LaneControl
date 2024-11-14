@@ -20,7 +20,8 @@ namespace api.Mappers
                 AlleyName = reservationModel.Lane.Alley.Name,
                 AlleyCity = reservationModel.Lane.Alley.City,
                 AlleyAddress = reservationModel.Lane.Alley.Address,
-                LaneId = reservationModel.LaneId
+                LaneId = reservationModel.LaneId,
+                AlleyId = reservationModel.Lane.Alley.Id
             };
         }
 

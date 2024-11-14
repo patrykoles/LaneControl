@@ -22,5 +22,7 @@ namespace api.Dtos.Reservation
         public string AlleyAddress { get; set; } = string.Empty;
 
         public int LaneId { get; set; }
+
+        public int AlleyId { get; set; }
     }
 }
