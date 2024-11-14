@@ -13,6 +13,7 @@ export type ReservationGet = {
     alleyCity: string;
     alleyAddress: string;
     laneId: number;
+    alleyId: number;
     
 }
 

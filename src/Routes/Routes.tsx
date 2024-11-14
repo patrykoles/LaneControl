@@ -15,6 +15,9 @@ import CreateMenuItemPage from "../Pages/MenuItemForms/CreateMenuItemPage/Create
 import UpdateMenuItemPage from "../Pages/MenuItemForms/UpdateMenuItemPage/UpdateMenuItemPage";
 import CreateReservationPage from "../Pages/ReservationForms/CreateReservationPage/CreateReservationPage";
 import ReservationsPage from "../Pages/ReservationsPage/ReservationsPage";
+import UpdateReservationPage from "../Pages/ReservationForms/UpdateReservationPage/UpdateReservationPage";
+import ReservationDetailsPage from "../Pages/ReservationDetailsPage/ReservationDetailsPage";
+import CreateOrderPage from "../Pages/CreateOrderPage/CreateOrderPage";
 
 export const router = createBrowserRouter([
     {
@@ -34,7 +37,9 @@ export const router = createBrowserRouter([
             {path: "addmenuitem", element: <ProtectedRoutes><CreateMenuItemPage /></ProtectedRoutes>},
             {path: "updatemenuitem/:id", element: <ProtectedRoutes><UpdateMenuItemPage /></ProtectedRoutes>},
             {path: "addreservation/:alleyid", element: <ProtectedRoutes><CreateReservationPage /></ProtectedRoutes>},
-            {path: "reservations", element: <ProtectedRoutes><ReservationsPage /></ProtectedRoutes>}, 
+            {path: "reservations", element: <ProtectedRoutes><ReservationsPage /></ProtectedRoutes>},
+            {path: "reservationdetails/:id", element: <ProtectedRoutes><ReservationDetailsPage /></ProtectedRoutes>},
+            {path: "addorder/:reservationid", element: <ProtectedRoutes><CreateOrderPage /></ProtectedRoutes>},
         ]
     }
 ])

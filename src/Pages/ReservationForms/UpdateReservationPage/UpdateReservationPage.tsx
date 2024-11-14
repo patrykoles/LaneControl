@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from "yup";
-import { findAvailableLanes, reservationPostAPI } from '../../../Services/ReservationServices';
+import { findAvailableLanes, reservationGetAPI, reservationPostAPI, reservationUpdateAPI } from '../../../Services/ReservationServices';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,12 +10,13 @@ import { AlleyGet } from '../../../Models/Alley';
 import { alleyGetAPI } from '../../../Services/AlleyService';
 import AvailableLanesList from '../../../Components/AvailableLanesList/AvailableLanesList';
 import ErrorBoundary from '../../../Components/ErrorBoundry/ErrorBoundry';
+import { ReservationGet } from '../../../Models/Reservation';
 
 type Props = {}
 
-export type CreateReservationFormInputs = {
-    beginTime: Date;
-    endTime: Date;
+export type UpdateReservationFormInputs = {
+    beginTime: string;
+    endTime: string;
 }
 
 export const toISOStringWithoutTimezone = (date: Date) => {
@@ -25,31 +26,55 @@ export const toISOStringWithoutTimezone = (date: Date) => {
 };
 
 const validation = Yup.object().shape({
-    beginTime: Yup.date()
-    .required('BeginTime jest wymagane')
-    .test('beginTime-check', 'Begin time must have minutes at 00', (value) => {
-      return value ? value.getMinutes() === 0 && value.getSeconds() === 0 && value.getMilliseconds() === 0 : true;
-    }),
-  endTime: Yup.date()
-    .required('EndTime jest wymagane')
-    .test('endTime-check', 'End time must have minutes at 59 and be at most 1 day away from beginTime', (value, context) => {
-      const beginTime = context.parent.beginTime;
-      if (value && beginTime) {
-        const diff = new Date(value).getTime() - new Date(beginTime).getTime();
-        const diffInHours = diff / (1000 * 60 * 60);
-        if (diffInHours > 24) {
-          return false;
+    beginTime: Yup.string()
+      .required('BeginTime jest wymagane')
+      .test('beginTime-check', 'Begin time must have minutes at 00', (value) => {
+        if (value) {
+          // Parsowanie stringa na obiekt Date
+          const date = new Date(value);
+          return date.getMinutes() === 0 && date.getSeconds() === 0 && date.getMilliseconds() === 0;
         }
-      }
-      return value ? value.getMinutes() === 59 && value.getSeconds() === 0 && value.getMilliseconds() === 0 : true;
-    }),
-});
+        return true; // Jeśli value jest undefined, walidacja przechodzi
+      }),
+    
+    endTime: Yup.string()
+      .required('EndTime jest wymagane')
+      .test('endTime-check', 'End time must have minutes at 59 and be at most 1 day away from beginTime', (value, context) => {
+        const beginTime = context.parent.beginTime;
+        if (value && beginTime) {
+          const beginDate = new Date(beginTime);
+          const endDate = new Date(value);
+  
+          // Sprawdzanie różnicy czasu
+          const diff = endDate.getTime() - beginDate.getTime();
+          const diffInHours = diff / (1000 * 60 * 60);
+          if (diffInHours > 24) {
+            return false;
+          }
+  
+          // Sprawdzanie minut i sekund
+          return endDate.getMinutes() === 59 && endDate.getSeconds() === 0 && endDate.getMilliseconds() === 0;
+        }
+        return true;
+      }),
+  });
 
-const CreateReservationPage = (props: Props) => {
-    let { alleyid } = useParams();
+const UpdateReservationPage = (props: Props) => {
+    let { alleyid, id } = useParams();
     const navigate = useNavigate();
     const [lanes, setLanes] = useState<LaneGet[]>([]);
     const [alley, setAlley] = useState<AlleyGet | null>(null);
+    const [reservation, setReservation] = useState<ReservationGet | null>(null);
+
+    useEffect(() => {
+        getReservation();
+    }, []);
+  
+    const getReservation = () => {
+      reservationGetAPI(Number(id)).then((res) => {
+          setReservation(res?.data!);
+      });
+    };
 
     useEffect(() => {
         getAlley();
@@ -61,26 +86,12 @@ const CreateReservationPage = (props: Props) => {
       });
     };
 
-    const handleReservation = (e: React.FormEvent, beginTime: Date, endTime: Date, laneId: number) => {
-      e.preventDefault();
-      const beginTimeISO = toISOStringWithoutTimezone(beginTime);
-      const endTimeISO = toISOStringWithoutTimezone(endTime);
-      reservationPostAPI(laneId, beginTimeISO, endTimeISO)
-        .then((res) => {
-          if (res) {
-            toast.success("Reservation created successfully!");
-            navigate(`/reservations`);
-          }
-        })
-        .catch((e) => {
-          toast.warning(e);
-        });
-      };
+    
 
-    const handleFindLanes = (e: CreateReservationFormInputs) => {
-        const beginTimeISO = toISOStringWithoutTimezone(e.beginTime);
-        const endTimeISO = toISOStringWithoutTimezone(e.endTime);
-        findAvailableLanes(Number(alleyid), beginTimeISO, endTimeISO, null)
+    const handleFindLanes = (e: UpdateReservationFormInputs) => {
+        const beginTimeISO = toISOStringWithoutTimezone( new Date(e.beginTime));
+        const endTimeISO = toISOStringWithoutTimezone( new Date(e.endTime));
+        findAvailableLanes(Number(reservation?.alleyId), beginTimeISO, endTimeISO, Number(reservation?.id))
             .then((res) => {
                 if(res && res.data) {
                     setLanes(res.data);
@@ -96,9 +107,39 @@ const CreateReservationPage = (props: Props) => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<CreateReservationFormInputs>({ resolver: yupResolver(validation) });
+    setValue,
+  } = useForm<UpdateReservationFormInputs>({ resolver: yupResolver(validation) });
+
+  useEffect(() => {
+    if (reservation) {
+      setValue("beginTime", toISOStringWithoutTimezone(new Date(reservation.beginTime))); // '2024-11-15T10:00'
+      setValue("endTime", toISOStringWithoutTimezone(new Date(reservation.endTime))); // '2024-11-15T11:00'
+      handleFindLanes({
+        beginTime: toISOStringWithoutTimezone(new Date(reservation.beginTime)),
+        endTime: toISOStringWithoutTimezone(new Date(reservation.endTime)),
+    })
+    }
+  }, [reservation, setValue]);
 
   const formData = watch();
+
+  const handleReservation = (e: React.FormEvent, beginTime: Date, endTime: Date, reservationId: number) => {
+    e.preventDefault();
+    const beginTimeISO = toISOStringWithoutTimezone(beginTime);
+    const endTimeISO = toISOStringWithoutTimezone(endTime);
+    reservationUpdateAPI(reservationId, beginTimeISO, endTimeISO)
+      .then((res) => {
+        if (res) {
+          toast.success("Reservation updated successfully!");
+          navigate(`/reservations`);
+        }
+      })
+      .catch((e) => {
+        toast.warning(e);
+      });
+    };
+
+    const resolvedReservationId = reservation?.id ?? null;
   return (
     <>
     {alley && (
@@ -147,7 +188,15 @@ const CreateReservationPage = (props: Props) => {
       </form>
     </div>
     {lanes.length > 0 ? (
-        <AvailableLanesList lanes={lanes} formData={formData} handleReservation={handleReservation} reservationId={null}/>
+        <AvailableLanesList
+        lanes={lanes}
+        formData={{
+            beginTime: new Date(formData.beginTime),
+            endTime: new Date(formData.endTime),
+        }}
+        handleReservation={handleReservation}
+        reservationId={resolvedReservationId}
+    />
       ) : (<div className="flex justify-center mb-6">
       <p className="text-gray-700 text-lg mb-6 py-6 px-20">No lines available at this time</p></div>
       )}
@@ -155,4 +204,4 @@ const CreateReservationPage = (props: Props) => {
   );
 }
 
-export default CreateReservationPage
+export default UpdateReservationPage
