@@ -21,7 +21,25 @@ namespace api.Mappers
                 AlleyCity = reservationModel.Lane.Alley.City,
                 AlleyAddress = reservationModel.Lane.Alley.Address,
                 LaneId = reservationModel.LaneId,
-                AlleyId = reservationModel.Lane.Alley.Id
+                AlleyId = reservationModel.Lane.Alley.Id,
+                ReservationUserName = reservationModel.AppUser.UserName
+            };
+        }
+
+        public static AdminReservationDto ToAdminReservationDto(this Reservation reservationModel)
+        {
+            return new AdminReservationDto
+            {
+                Id = reservationModel.Id,
+                BeginTime = reservationModel.BeginTime,
+                EndTime = reservationModel.EndTime,
+                LaneNumber = reservationModel.Lane.Number,
+                AlleyName = reservationModel.Lane.Alley.Name,
+                AlleyCity = reservationModel.Lane.Alley.City,
+                AlleyAddress = reservationModel.Lane.Alley.Address,
+                LaneId = reservationModel.LaneId,
+                AlleyId = reservationModel.Lane.Alley.Id,
+                ReservationUserName = reservationModel.AppUser.UserName
             };
         }
 

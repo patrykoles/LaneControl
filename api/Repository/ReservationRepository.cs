@@ -163,9 +163,45 @@ namespace api.Repository
             return newLanes;
         }
 
+        public async Task<List<Reservation>> GetAdminReservationsAsync(AdminReservationQuery query)
+        {
+            var reservations = _context.Reservations.Include(r => r.AppUser).Include(r => r.Lane).ThenInclude(l => l.Alley).AsQueryable();
+            if(query.isExpired)
+            {
+                reservations = reservations.Where(r => r.EndTime < DateTime.Now);
+            }
+            else
+            {
+                reservations = reservations.Where(r => r.EndTime >= DateTime.Now);
+            }
+            if(query.LaneNumber != null)
+            {
+                reservations = reservations.Where(r => r.Lane.Number == query.LaneNumber);
+            }
+            if(query.AlleyName != null)
+            {
+                reservations = reservations.Where(r => r.Lane.Alley.Name.Contains(query.AlleyName));
+            }
+            if(query.City != null)
+            {
+                reservations = reservations.Where(r => r.Lane.Alley.City.Contains(query.City));
+            }
+            if(query.Day != null)
+            {
+                DateTime data = (DateTime)query.Day;
+                reservations = reservations.Where(r => r.BeginTime.Date == data.Date);
+            }
+            if(query.UserName != null)
+            {
+                reservations = reservations.Where(r => r.AppUser.UserName.Contains(query.UserName));
+            }
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            return await reservations.OrderBy(x => x.BeginTime).Skip(skipNumber).Take(query.PageSize).ToListAsync();
+        }
+
         public async Task<Reservation?> GetByIdAsync(int id)
         {
-            return await _context.Reservations.Include(r => r.Lane).ThenInclude(l => l.Alley).FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Reservations.Include(r => r.AppUser).Include(r => r.Lane).ThenInclude(l => l.Alley).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<Reservation>> GetUserReservationsAsync(AppUser user, ReservationQuery query)
@@ -181,7 +217,7 @@ namespace api.Repository
                 reservations = reservations.Where(r => r.EndTime >= DateTime.Now);
             }
             var skipNumber = (query.PageNumber - 1) * query.PageSize;
-            return await reservations.OrderBy(x => x.BeginTime).Include(r => r.Lane).ThenInclude(l => l.Alley).Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            return await reservations.OrderBy(x => x.BeginTime).Include(r => r.AppUser).Include(r => r.Lane).ThenInclude(l => l.Alley).Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Reservation?> UpdateAsync(int id, UpdateReservationRequestDto reserevationDto)

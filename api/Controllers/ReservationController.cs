@@ -46,6 +46,24 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Route("adminaccess")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetReservationAdmin([FromQuery] AdminReservationQuery query)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if(appUser == null){
+                return Forbid();
+            }
+            var reservations = await _reservationRepo.GetAdminReservationsAsync(query);
+            var reservationDtos = reservations.Select(x => x.ToAdminReservationDto());
+
+            return Ok(reservationDtos);
+        }
+
+        [HttpGet]
         [Route("{id:int}")]
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
@@ -193,6 +211,33 @@ namespace api.Controllers
             if(!(_reservationRepo.CheckIfDateIsNotInThePast(oldReservation)))
             {
                 return BadRequest("Nie można anulować rezerwacji która już się odbyła!");
+            }
+
+            var reservation = await _reservationRepo.DeleteAsync(id);
+            if(reservation == null)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("adminaccess/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDelete([FromRoute] int id)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if(appUser == null)
+            {
+                return Forbid();
+            }
+            var oldReservation = await _reservationRepo.GetByIdAsync(id);
+            if(oldReservation == null)
+            {
+                return NotFound();
             }
 
             var reservation = await _reservationRepo.DeleteAsync(id);

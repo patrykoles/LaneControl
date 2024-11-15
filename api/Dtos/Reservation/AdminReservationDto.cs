@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace api.Dtos.Reservation
 {
-    public class ReservationDto
+    public class AdminReservationDto
     {
-        public int Id { get; set; }
+       public int Id { get; set; }
 
         public DateTime BeginTime { get; set; }
 
@@ -23,8 +23,8 @@ namespace api.Dtos.Reservation
 
         public int LaneId { get; set; }
 
-        public int AlleyId { get; set; }
+        public int AlleyId { get; set; } 
 
-        public string ReservationUserName { get; set; } = string.Empty;
+        public string ReservationUserName { get; set;} = string.Empty;
     }
 }

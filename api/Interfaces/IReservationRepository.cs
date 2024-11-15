@@ -12,6 +12,8 @@ namespace api.Interfaces
     {
         Task<List<Reservation>> GetUserReservationsAsync(AppUser user, ReservationQuery query);
 
+        Task<List<Reservation>> GetAdminReservationsAsync(AdminReservationQuery query);
+
         Task<Reservation?> GetByIdAsync(int id);
 
         Task<Reservation> CreateAsync(Reservation reservationModel);
