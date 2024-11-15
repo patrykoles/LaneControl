@@ -14,7 +14,20 @@ export type ReservationGet = {
     alleyAddress: string;
     laneId: number;
     alleyId: number;
-    
+    reservationUserName: string;
+}
+
+export type ReservationAdminGet = {
+    id: number;
+    beginTime: string;
+    endTime: string;
+    laneNumber: number;
+    alleyName: string;
+    alleyCity: string;
+    alleyAddress: string;
+    laneId: number;
+    alleyId: number;
+    reservationUserName: string;
 }
 
 export type ReservationUpdate = {

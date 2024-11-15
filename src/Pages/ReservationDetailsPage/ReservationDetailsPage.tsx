@@ -6,14 +6,17 @@ import { OrderGet } from '../../Models/Order';
 import { orderGetAllAPI } from '../../Services/OrderServices';
 import OrderList from '../../Components/OrderList/OrderList';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../Context/UseAuth';
 
 type Props = {}
 
 const ReservationDetailsPage = (props: Props) => {
     const { id } = useParams();
+    const { user } = useAuth();
     const [reservation, setReservation] = useState<ReservationGet | null>(null);
 
     const [orders, setOrders] = useState<OrderGet[]>([]);
+    const [isFirstChange, setIsFirstChange] = useState(true);
 
   useEffect(() => {
     getOrders();
@@ -31,11 +34,27 @@ const getOrders = () => {
         getReservation();
     }, []);
 
+    useEffect(() => {
+        if (!isFirstChange) {
+            validateUser(); // Wywołaj dopiero po pierwszej zmianie reservation
+        } else if (reservation !== null) {
+            setIsFirstChange(false); // Wyłącz flagę, gdy reservation zostanie zainicjalizowane
+        }
+    }, [reservation]);
+
     const getReservation = () => {
         reservationGetAPI(Number(id)).then((res) => {
             setReservation(res?.data!);
         });
       };
+
+      const validateUser = () => {
+        console.log("user: ",user?.userName);
+        console.log("reservation user: ", reservation?.reservationUserName)
+            if(user?.userName != reservation?.reservationUserName){
+                navigate("/");
+            }
+      }
 
       const isReservationActive = reservation && new Date(reservation.endTime).getTime() > new Date().getTime();
       const navigate = useNavigate();

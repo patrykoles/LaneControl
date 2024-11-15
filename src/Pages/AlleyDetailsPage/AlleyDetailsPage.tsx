@@ -49,12 +49,15 @@ const getLanes = () => {
       {alley ? (
         <>
           <AlleyDetails alley={alley} />
+          
           <div className="flex justify-center mt-4 my-5">
+          { !isAdmin ? (
           <Link to={`/addreservation/${alley.id}`} >
           <button className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600">
             Make Reservation
           </button>
           </Link>
+          ) : ""}
         <button
             onClick={handleBackClick}
             className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 mx-3"

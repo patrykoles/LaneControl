@@ -28,7 +28,7 @@ const Navbar = (props: Props) => {
             <Link to="/menu" className="text-black hover:text-darkBlue">Offer</Link>
             {!isAdmin ? (
             <Link to="/reservations" className="text-black hover:text-darkBlue">Reservations</Link>
-            ) : ""}
+            ) : (<Link to="/adminreservations" className="text-black hover:text-darkBlue">Reservations</Link>)}
           </div>
         </div>
 
@@ -71,7 +71,7 @@ const Navbar = (props: Props) => {
           <Link to="/menu" onClick={toggleMobileMenu} className="block text-black hover:text-darkBlue">Offer</Link>
           {!isAdmin ? (
           <Link to="/reservations" onClick={toggleMobileMenu} className="block text-black hover:text-darkBlue">Reservations</Link>
-          ) : ""}
+          ) : (<Link to="/adminreservations" onClick={toggleMobileMenu} className="text-black hover:text-darkBlue">Reservations</Link>)}
           
           {isLoggedIn() ? (
             <>
