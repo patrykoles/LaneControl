@@ -52,16 +52,17 @@ const MenuItem = (props: Props) => {
                 className="px-4 py-2 border-2 border-gray-400 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
             />
         </div>
-        {menuItems ? (
-          <>
-          <MenuItemList menuItems={menuItems!} />
-          {isAdmin ? (
+        {isAdmin ? (
           <div className="flex justify-center mt-4 my-5">
             <Link to={`/addmenuitem`}>
               <button className="bg-white text-blue-500 border-2 border-blue-500 px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white hover:border-blue-600">Add New Menu Item</button>
             </Link>
           </div> 
           ) : "" }
+        {menuItems ? (
+          <>
+          <MenuItemList menuItems={menuItems!} />
+          
           </>
         ) : ""}
     </div>

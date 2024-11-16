@@ -65,11 +65,6 @@ const getLanes = () => {
             <span>Back</span>
         </button>
           </div>
-          {lanes ? (
-            <LaneList lanes={lanes} />
-          ) : (
-            <p>No lanes here</p>
-          )}
           {isAdmin ? (
           <div className="flex justify-center mt-4 my-5">
           <Link to={`/addlane/${alley.id}`}>
@@ -77,6 +72,12 @@ const getLanes = () => {
           </Link>
           </div> 
           ) : ""}
+          {lanes ? (
+            <LaneList lanes={lanes} />
+          ) : (
+            <p>No lanes here</p>
+          )}
+          
         </>
       ) : (
         <p className="flex flex-col items-center text-center">This alley does not exist!</p>

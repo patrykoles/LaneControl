@@ -30,21 +30,32 @@ const AlleyListItem = ({ alley }: Props) => {
             <p className="text-gray-600"><strong>Operating hours: </strong> { alley.openingTime.slice(0, 5) } - { alley.closingTime.slice(0, 5) }</p>
         </div>
 
-        <div className="mt-6 flex space-x-4">
+        
             {isAdmin ? (
             <>
+            <div className="mt-6 flex space-x-4">
             <Link to={`/updatealley/${alley.id}`}>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Edit</button>
             </Link>
             <form onSubmit={deleteAlley}>
             <button type='submit' className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete</button>
             </form>
-            </>
-            ) : ""}
             <Link to={`/alleydetails/${alley.id}`}>
             <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Browse</button>
             </Link>
-        </div>
+            </div>
+            </>
+            ) : (
+                <>
+                    <div className="flex justify-center">
+                    <Link to={`/alleydetails/${alley.id}`}>
+                        <button className="bg-green-500 text-white px-4 py-1 my-2 rounded-md hover:bg-green-600">Browse</button>
+                    </Link>
+                    </div>
+                </>
+            )}
+            
+        
     </div>
 </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from './logo.png';
+import logo from './logo.svg';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../Context/UseAuth';
 
@@ -36,7 +36,7 @@ const Navbar = (props: Props) => {
         <div className="hidden lg:flex items-center space-x-6 text-black">
           {isLoggedIn() ? (
             <>
-              <div>Welcome, {user?.userName}</div>
+              <div>Hello, {user?.userName}!</div>
               <button
                 onClick={logout}
                 className="px-8 py-3 font-bold rounded text-white bg-lightGreen hover:opacity-70"

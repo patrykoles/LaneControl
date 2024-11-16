@@ -43,7 +43,7 @@ const MenuItemListItem = ({ menuItem }: Props) => {
             <div className="space-x-2">
               {/* Link do edytowania pozycji */}
               <Link to={`/updatemenuitem/${menuItem.id}`}>
-                <button className="bg-blue-500 text-white py-2 px-5 rounded-lg hover:bg-blue-600 transition-colors">
+                <button className="bg-blue-500 text-white py-1 px-5 my-1 rounded-lg hover:bg-blue-600 transition-colors">
                   Edit
                 </button>
               </Link>
@@ -51,7 +51,7 @@ const MenuItemListItem = ({ menuItem }: Props) => {
               <form onSubmit={deleteMenuItem}>
                 <button
                   type="submit"
-                  className="bg-red-500 text-white py-2 px-5 rounded-lg hover:bg-red-600 transition-colors"
+                  className="bg-red-500 text-white py-1 px-5 my-1 rounded-lg hover:bg-red-600 transition-colors"
                 >
                   Delete
                 </button>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAuth } from '../../Context/UseAuth';
 import { Link } from 'react-router-dom';
-import welcomeImage from './alley.jpg'
+import welcomeImage from './alley2.jpg'
 
 interface Props {}
 

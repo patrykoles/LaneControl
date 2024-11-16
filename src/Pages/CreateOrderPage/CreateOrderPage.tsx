@@ -72,7 +72,7 @@ const CreateOrderPage = (props: Props) => {
         </div>
       ))}
       <div className="text-right mt-6">
-        <strong className="text-lg">Total: ${calculateTotal().toFixed(2)}</strong>
+        <strong className="text-lg">Total: {calculateTotal().toFixed(2)} PLN</strong>
       </div>
       <button
         type="submit"
