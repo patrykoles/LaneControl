@@ -20,6 +20,6 @@ namespace api.Helpers
         public bool isExpired { get; set; } = false;
         public int PageNumber { get; set; } = 1;
 
-        public int PageSize { get; set; } = 40;
+        public int PageSize { get; set; } = 100;
     }
 }
