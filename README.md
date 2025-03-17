@@ -22,6 +22,7 @@ This application is designed to manage a network of bowling alleys, providing us
 In order to run backend of the app open file `LaneControl/LaneControl-backend/api/appsetting.json` and replace placeholder values in **DefaultConnection** and **SigningKey** with your own data.
 Then go to directory `LaneControl/LaneControl-backend/api` and run:
 ```sh
+dotnet ef database update
 dotnet watch run
 ```
 In order to run frontend of the app go to directory `LaneControl/LaneControl-frontend`.
