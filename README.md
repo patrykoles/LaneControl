@@ -1,4 +1,4 @@
-# LaneControll
+# LaneControl
 ## Description
 This application is designed to manage a network of bowling alleys, providing users with a seamless experience for booking lanes and ordering food.
 ## Key Functionalities:
@@ -19,12 +19,12 @@ This application is designed to manage a network of bowling alleys, providing us
 - React Hook Form & Yup for form validation
 - Tailwind CSS for styling
 ## Deployment
-In order to run backend of the app go to directory `LaneControll/LaneControll-backend/api`.
-Then run:
+In order to run backend of the app open file `LaneControl/LaneControl-backend/api/appsetting.json` and replace placeholder values in **DefaultConnection** and **SigningKey** with your own data.
+Then go to directory `LaneControl/LaneControl-backend/api` and run:
 ```sh
 dotnet watch run
 ```
-In order to run frontend of the app go to directory `LaneControll/LaneControll-frontend`.
+In order to run frontend of the app go to directory `LaneControl/LaneControl-frontend`.
 Then run:
 ```sh
 npm install
