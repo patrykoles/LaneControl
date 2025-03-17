@@ -19,7 +19,7 @@ This application is designed to manage a network of bowling alleys, providing us
 - React Hook Form & Yup for form validation
 - Tailwind CSS for styling
 ## Deployment
-In order to run backend of the app open file `LaneControl/LaneControl-backend/api/appsetting.json` and replace placeholder values in **DefaultConnection** and **SigningKey** with your own data.
+In order to run backend of the app open file `LaneControl/LaneControl-backend/api/appsetting.json` and replace placeholder values in **DefaultConnection** and **SigningKey** fields with your own data.
 Then go to directory `LaneControl/LaneControl-backend/api` and run:
 ```sh
 dotnet ef database update
